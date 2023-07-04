@@ -1,7 +1,8 @@
 from django.urls import path
-from .api import Reviews
+from .api import BusinessRegisterStageAPI, HealthCheck
 
 urlpatterns = [
-    path("", Reviews.as_view(), name="reviews"),
+    path("health-check/", HealthCheck.as_view(), name="health-check"),
+    path("register-stage/", BusinessRegisterStageAPI.as_view(), name="register-stage"),
 ]
 
