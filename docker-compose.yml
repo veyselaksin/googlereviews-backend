@@ -25,6 +25,32 @@ services:
       - .:/app
     depends_on:
       - postgresdb
+  
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    volumes:
+      - .:/app
+    env_file: .env
+    depends_on:
+      - googlereviews
+      - redis
+         
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.celerybeat
+    volumes:
+      - .:/app
+    env_file: .env
+    depends_on:
+      - googlereviews
+      - redis
+
+  redis:
+    image: "redis:alpine"
+
 
 volumes:
   postgres-data:

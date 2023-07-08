@@ -3,3 +3,6 @@ psycopg2-binary==2.9.6
 djangorestframework==3.14.0
 Markdown==3.4.3
 django-filter==23.2
+outscraper==3.0.3
+celery==4.4.2
+redis==4.4.0
