@@ -1,14 +1,5 @@
-import sys
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-from django.template.loader import render_to_string
-from django.core.mail import send_mail
-from django.utils.html import strip_tags
-from django.db.models import Q
-
-from ..reviews.models import Business, Review, BusinessRegisterStage
+from ..reviews.models import Business, BusinessRegisterStage
 
 import os
 from outscraper import ApiClient
