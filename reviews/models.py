@@ -14,14 +14,11 @@ class Business(AbstractModel):
         return self.name
 
 class Review(AbstractModel):
-    business = models.ForeignKey(Business, on_delete=models.CASCADE)
     google_id = models.CharField(max_length=100)
     author_name = models.CharField(max_length=120)
-    author_url = models.CharField(max_length=100)
-    language = models.CharField(max_length=100)
-    rating = models.IntegerField()
+    rating = models.FloatField()
     text = models.TextField()
-    timestamp = models.DateTimeField()
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.text
