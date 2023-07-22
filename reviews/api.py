@@ -47,38 +47,40 @@ class ReviewAPI(APIView):
             return ErrorResponse(500, message="Unexpected error occured")
 
 # TODO: This is a cron job, it should be moved to a separate file
-# class CronJob(APIView):
-#     permission_classes = [AllowAny]
+class CronJob(APIView):
+    permission_classes = [AllowAny]
 
-#     def get(self, request, format=None):
-#         try:
-#             # get an instance of BusinessRegisterStage
-#             business_register_stage = BusinessRegisterStage.objects.get(id=1)
-#             client = ApiClient(api_key=os.environ.get('OUTSCRAPER_API_KEY'))
-#             # reviews limit unlimited
-#             result = client.google_maps_business_reviews(business_register_stage.url, reviews_limit=0)
-#             # create a business instance
-#             business = Business.objects.create(
-#                 google_id=result[0]['google_id'],
-#                 place_id=result[0]['place_id'],
-#                 name=result[0]['name'],
-#                 address=result[0]['full_address'],
-#                 phone=result[0]['phone'],
-#                 rating=result[0]['rating']
-#             ).save()
+    def get(self, request, format=None):
+        try:
+            # get an instance of BusinessRegisterStage
+            business_register_stage = BusinessRegisterStage.objects.get(id=1)
+            client = ApiClient(api_key=os.environ.get('OUTSCRAPER_API_KEY'))
+            # reviews limit unlimited
+            result = client.google_maps_business_reviews(business_register_stage.url, reviews_limit=0, sort='newest')
 
-#             # create reviews instances
-#             for review in result[0]['reviews_data']:
-#                 if review['review_text'] == None:
-#                     review['review_text'] = ""
-#                 Review.objects.create(
-#                     google_id=review['google_id'],
-#                     author_name=review['author_title'],
-#                     rating=review['review_rating'],
-#                     text=review['review_text'],
-#                     likes=review['review_likes'],
-#                 ).save()
+            # create a business instance
+            business = Business.objects.create(
+                google_id=result[0]['google_id'],
+                place_id=result[0]['place_id'],
+                name=result[0]['name'],
+                address=result[0]['full_address'],
+                phone=result[0]['phone'],
+                rating=result[0]['rating']
+            ).save()
 
-#             return SuccessResponse(200, message="CronJob executed successfully", data=result)
-#         except Exception:
-#             return ErrorResponse(500, message="Unexpected error occured")
+            # create reviews instances
+            for review in result[0]['reviews_data']:
+                if review['review_text'] == None:
+                    review['review_text'] = ""
+                Review.objects.create(
+                    google_id=review['google_id'],
+                    author_name=review['author_title'],
+                    rating=review['review_rating'],
+                    text=review['review_text'],
+                    likes=review['review_likes'],
+                ).save()
+
+            return SuccessResponse(200, message="CronJob executed successfully", data=result)
+        except Exception as err:
+            print("Unexpected error:", err)
+            return ErrorResponse(500, message="Unexpected error occured")
