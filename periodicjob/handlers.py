@@ -1,5 +1,5 @@
 from django.utils.translation import gettext_lazy as _
-from ..reviews.models import Business, BusinessRegisterStage
+from reviews.models import Business, BusinessRegisterStage, Review
 
 import os
 from outscraper import ApiClient
@@ -26,17 +26,17 @@ def register_business_handler():
                 rating=result[0]['rating']
             ).save()
 
-        # # create reviews instances
-        # for review in result[0]['reviews_data']:
-        #     if review['review_text'] == None:
-        #         review['review_text'] = ""
-        #     Review.objects.create(
-        #         google_id=review['google_id'],
-        #         author_name=review['author_title'],
-        #         rating=review['review_rating'],
-        #         text=review['review_text'],
-        #         likes=review['review_likes'],
-        #     ).save()
+        # create reviews instances
+        for review in result[0]['reviews_data']:
+            if review['review_text'] == None:
+                review['review_text'] = ""
+            Review.objects.create(
+                google_id=review['google_id'],
+                author_name=review['author_title'],
+                rating=review['review_rating'],
+                text=review['review_text'],
+                likes=review['review_likes'],
+            ).save()
 
         return True
     except Exception:
